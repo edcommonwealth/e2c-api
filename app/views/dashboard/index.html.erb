@@ -1,0 +1,38 @@
+<%= form_with url: root_path, method: :get, local: true do |f| %>
+    <div>
+      <%= label_tag :org_type, "Report Type" %>
+      <%= select_tag :org_type, options_for_select(@filters[:org_types], @selected[:org_type]) %>
+  
+      <%= label_tag :sy, "School Year" %>
+      <%= select_tag :sy, options_for_select(@filters[:school_years], @selected[:sy]) %>
+  
+      <%= label_tag :grad_rate_type, "Graduation Rate Type" %>
+      <%= select_tag :grad_rate_type, options_for_select(@filters[:rate_types], @selected[:grad_rate_type]) %>
+  
+      <%= label_tag :stu_grp, "Student Group" %>
+      <%= select_tag :stu_grp, options_for_select(@filters[:student_groups], @selected[:stu_grp]) %>
+  
+      <%= submit_tag "Filter" %>
+    </div>
+  <% end %>
+  
+  <% if @data.present? %>
+    <table>
+      <thead>
+        <tr><% @data.first.keys.each do |key| %><th><%= key %></th><% end %></tr>
+      </thead>
+      <tbody>
+        <% @data.each do |row| %>
+          <tr><% row.each { |_, value| %><td><%= value %></td><% } %></tr>
+        <% end %>
+      </tbody>
+    </table>
+  
+    <%= link_to "Download CSV", download_csv_path(request.query_parameters), class: "button" %>
+    <%= link_to "Download PDF", download_pdf_path(request.query_parameters), class: "button" %>
+  <% else %>
+    <% if @selected.present? %>
+      <p>No data found for the selected combination.</p>
+    <% end %>
+  <% end %>
+  
